@@ -1,0 +1,15 @@
+version: "1"
+services:
+  mysql-server:
+    image: "mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: todo
+    ports:
+      - 3306:3306
+  todo-app:
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/usr/src/workspace

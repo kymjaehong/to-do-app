@@ -2,5 +2,5 @@
 Android &amp; FastAPI
 
 ```
-Dockerfile 내에서 MySQL localhost (111) error
+Dockerfile, MySQL localhost (111) error
 ```

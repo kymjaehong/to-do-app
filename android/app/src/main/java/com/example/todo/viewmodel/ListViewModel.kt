@@ -21,8 +21,8 @@ class ListViewModel @Inject constructor(
 
     ): ViewModel() {
 
-    private val _toDoList = MutableStateFlow<ApiResponse<ArrayList<ToDoResponse>>>(ApiResponse.Loading())
-    val todoList: StateFlow<ApiResponse<ArrayList<ToDoResponse>>> = _toDoList
+    private val _toDoList = MutableStateFlow<ApiResponse<List<ToDoResponse>>>(ApiResponse.Loading())
+    val todoList: StateFlow<ApiResponse<List<ToDoResponse>>> = _toDoList
 
     fun getToDoList(user_id: Int) {
         viewModelScope.launch {

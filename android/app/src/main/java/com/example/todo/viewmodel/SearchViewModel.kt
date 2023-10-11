@@ -21,8 +21,8 @@ class SearchViewModel @Inject constructor(
 
     ): ViewModel() {
 
-    private val _searchToDoList = MutableStateFlow<ApiResponse<ArrayList<ToDoResponse>>>(ApiResponse.Loading())
-    val searchTodoList: StateFlow<ApiResponse<ArrayList<ToDoResponse>>> = _searchToDoList
+    private val _searchToDoList = MutableStateFlow<ApiResponse<List<ToDoResponse>>>(ApiResponse.Loading())
+    val searchTodoList: StateFlow<ApiResponse<List<ToDoResponse>>> = _searchToDoList
 
     fun searchToDoList(user_id: Int, keyword: String) {
         viewModelScope.launch {

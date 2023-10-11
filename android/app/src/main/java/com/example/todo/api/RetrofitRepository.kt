@@ -18,7 +18,7 @@ class RetrofitRepository @Inject constructor(
 ) {
     suspend fun getToDoList(
         user_id: Int
-    ): Flow<ApiResponse<ArrayList<ToDoResponse>>> = flow {
+    ): Flow<ApiResponse<List<ToDoResponse>>> = flow {
         try {
             val res = retrofitService.getToDoList(user_id)
             if (res.isSuccessful) {
@@ -52,7 +52,7 @@ class RetrofitRepository @Inject constructor(
     suspend fun searchToDoList(
         user_id: Int,
         keyword: String,
-    ): Flow<ApiResponse<ArrayList<ToDoResponse>>> = flow {
+    ): Flow<ApiResponse<List<ToDoResponse>>> = flow {
         try {
             val res = retrofitService.searchToDoList(user_id = user_id, keyword = keyword)
             if (res.isSuccessful) {

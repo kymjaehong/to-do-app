@@ -12,7 +12,7 @@ import com.example.todo.ToDoActivity
 import com.example.todo.data.response.ToDoResponse
 
 class ToDoListRecyclerViewAdapter(
-    val toDoList: ArrayList<ToDoResponse>,
+    val toDoList: List<ToDoResponse>,
     val inflater: LayoutInflater,
     val activity: ToDoActivity,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

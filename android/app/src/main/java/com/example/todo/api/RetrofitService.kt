@@ -20,7 +20,7 @@ interface RetrofitService {
     @GET("to-do/{user_id}")
     suspend fun getToDoList(
         @Path("user_id") user_id: Int
-    ): Response<ArrayList<ToDoResponse>>
+    ): Response<List<ToDoResponse>>
 
     @POST("to-do/{user_id}")
     fun writeToDo(
@@ -32,7 +32,7 @@ interface RetrofitService {
     suspend fun searchToDoList(
         @Path("user_id") user_id: Int,
         @Query("keyword") keyword: String,
-    ): Response<ArrayList<ToDoResponse>>
+    ): Response<List<ToDoResponse>>
 
     @PATCH("to-do/complete/{toDoId}")
     suspend fun updateToDoComplete(

@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.todo.api.ApiResponse
 import com.example.todo.api.RetrofitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +28,7 @@ class UpdateViewModel @Inject constructor(
     fun updateToDoList(to_do_id: Int) {
         viewModelScope.launch {
             retrofitRepository.updateToDoComplete(to_do_id = to_do_id)
+                .flowOn(Dispatchers.Main.immediate)
                 .catch { error ->
                     Log.e("logcat","updateViewModel $error")
                     _updateToDoList.value = ApiResponse.Error(error.message!!)

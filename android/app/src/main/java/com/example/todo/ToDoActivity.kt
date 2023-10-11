@@ -83,7 +83,7 @@ class ToDoActivity : BaseActivity() {
         }
         binding.searchBtn.setOnClickListener {
             lifecycleScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     clickSearchBtn()
                 }
             }
@@ -125,7 +125,7 @@ class ToDoActivity : BaseActivity() {
 
     fun updateToDoComplete(to_do_id: Int) {
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 updateViewModel.apply {
                     updateToDoList(to_do_id)
                     updateTodoList.collect { apiResponse ->

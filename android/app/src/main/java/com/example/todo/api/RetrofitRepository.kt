@@ -31,7 +31,7 @@ class RetrofitRepository @Inject constructor(
             Log.e("logcat", "repository getToDoList error: ${e.printStackTrace()}")
             emit(ApiResponse.Error(e.message!!))
         }
-    }.flowOn(Dispatchers.Main.immediate)
+    }.flowOn(Dispatchers.IO)
 
     fun writeToDo(
         toDoWriteRequest: ToDoWriteRequest,
@@ -65,7 +65,7 @@ class RetrofitRepository @Inject constructor(
             Log.e("logcat", "repository searchToDoList error: ${e.printStackTrace()}")
             emit(ApiResponse.Error(e.message!!))
         }
-    }.flowOn(Dispatchers.Main.immediate)
+    }.flowOn(Dispatchers.IO)
 
     suspend fun updateToDoComplete(
         to_do_id: Int,
@@ -82,5 +82,5 @@ class RetrofitRepository @Inject constructor(
             Log.e("logcat", "repository updateComplete error: ${e.printStackTrace()}")
             emit(ApiResponse.Error(e.message!!))
         }
-    }.flowOn(Dispatchers.Main.immediate)
+    }
 }

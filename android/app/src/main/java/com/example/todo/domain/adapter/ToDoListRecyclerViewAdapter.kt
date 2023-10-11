@@ -1,4 +1,4 @@
-package com.example.todo.ui.adapter
+package com.example.todo.domain.adapter
 
 import android.util.Log
 import android.view.LayoutInflater

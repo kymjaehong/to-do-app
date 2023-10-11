@@ -16,7 +16,7 @@ import com.example.todo.ui.BaseActivity
 import com.example.todo.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.example.todo.ui.adapter.ToDoListRecyclerViewAdapter
+import com.example.todo.domain.adapter.ToDoListRecyclerViewAdapter
 import com.example.todo.viewmodel.SearchViewModel
 import com.example.todo.viewmodel.UpdateViewModel
 

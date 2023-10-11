@@ -9,8 +9,9 @@ import com.example.todo.api.RetrofitRepository
 import com.example.todo.data.response.ToDoResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +23,7 @@ class SearchViewModel @Inject constructor(
     ): ViewModel() {
 
     private val _searchToDoList = MutableStateFlow<ApiResponse<List<ToDoResponse>>>(ApiResponse.Loading())
-    val searchTodoList: StateFlow<ApiResponse<List<ToDoResponse>>> = _searchToDoList
+    val searchTodoList = _searchToDoList.asStateFlow()
 
     fun searchToDoList(user_id: Int, keyword: String) {
         viewModelScope.launch {
@@ -30,7 +31,7 @@ class SearchViewModel @Inject constructor(
                 .catch { error ->
                     _searchToDoList.value = ApiResponse.Error(error.message!!)
                 }
-                .collect { values ->
+                .collectLatest { values ->
                     Log.d("logcat","listViewModel getToDoList call")
                     _searchToDoList.value = values
             }

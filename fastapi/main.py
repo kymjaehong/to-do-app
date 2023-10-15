@@ -1,8 +1,8 @@
 import time
 from fastapi import FastAPI, Request
 
-from routes.v1.router import v1_router
-from database import Base, engine
+from router.v1.router import v1_router
+from core.database.database import Base, engine
 
 
 app = FastAPI(title="To-Do App")
@@ -23,5 +23,5 @@ def init_db():
     Base.metadata.create_all(bind=engine)
 
 
-# init_db() # I only do it at first time
+# init_db()  # I only do it at first time
 app.include_router(v1_router, prefix="/api/v1")

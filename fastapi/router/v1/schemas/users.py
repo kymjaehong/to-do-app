@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from schemas.todo import ToDo
+from router.v1.schemas.todo import ToDo
 
 
 class UserBase(BaseModel):

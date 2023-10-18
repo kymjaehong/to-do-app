@@ -13,9 +13,9 @@ class RegisterToDoUsecase(object):
 
     async def execute(
         self, user_id: int, to_do_create: ToDoCreate, created_now: datetime
-    ) -> int:
+    ):
         user = await self._user_service.get_user(user_id=user_id)
         new_todo = ToDo.create(
             content=to_do_create.content, created=created_now, user_id=user.id
         )
-        return self._todo_service.create_todo(new_todo)
+        return await self._todo_service.create_todo(new_todo)

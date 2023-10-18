@@ -36,7 +36,7 @@ async def search_todo_list(
     return await get_todo_by_cond_usecase.execute(user_id=user_id, keyword=keyword)
 
 
-@router.post("/{user_id}", response_model=ToDoSchema)
+@router.post("/{user_id}", response_model=None)
 @inject
 async def register_todo(
     user_id: int,
@@ -44,17 +44,17 @@ async def register_todo(
     register_todo_usecase: RegisterToDoUsecase = Depends(
         Provide[Container.register_todo_user_usecase]
     ),
-) -> ToDoSchema:
+):
     created_now = func.now()
     return await register_todo_usecase.execute(
         user_id=user_id, to_do_create=to_do_create, created_now=created_now
     )
 
 
-@router.patch("/complete/{to_do_id}", response_model=ToDoSchema)
+@router.patch("/complete/{to_do_id}", response_model=None)
 @inject
 async def update_todo(
     to_do_id: int,
     todo_service: ToDoService = Depends(Provide[Container.todo_service]),
-) -> ToDoSchema:
+):
     return await todo_service.update_todo(to_do_id=to_do_id)

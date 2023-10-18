@@ -1,10 +1,10 @@
-from app.domain.todo.todo_repository import ToDoRepository
+from app.domain.todo.todo_repository import AbstractToDoRepostiroy
 from app.domain.todo.todo import ToDo
 from app.domain.users.users import User
 
 
 class ToDoService:
-    def __init__(self, todo_repository: ToDoRepository):
+    def __init__(self, todo_repository: AbstractToDoRepostiroy):
         self._to_do_repository = todo_repository
 
     async def get_todo_list_by_user(self, user: User) -> list[ToDo]:
@@ -16,7 +16,7 @@ class ToDoService:
         )
 
     async def create_todo(self, to_do: ToDo) -> ToDo:
-        return self._to_do_repository.save(to_do=to_do)
+        return await self._to_do_repository.save(to_do=to_do)
 
     async def update_todo(self, to_do_id: int) -> ToDo:
         to_do = await self._to_do_repository.find_by_id(to_do_id=to_do_id)

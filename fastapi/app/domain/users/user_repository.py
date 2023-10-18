@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import Union
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -6,6 +7,12 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy import select
 
 from app.domain.users.users import User
+
+
+class AbstractUserRepository(ABC):
+    @abstractmethod
+    async def find_by_id(self) -> User:
+        raise NotImplementedError
 
 
 class UserRepository:

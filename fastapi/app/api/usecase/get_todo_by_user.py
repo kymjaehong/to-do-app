@@ -1,6 +1,6 @@
-from app.domain.users.user_service import UserService
-from app.domain.todo.todo_service import ToDoService
-from app.domain.todo.todo import ToDo
+from app.service.user_service import UserService
+from app.service.todo_service import ToDoService
+from app.domain.todo import ToDo
 
 
 class GetToDoByUserUsecase:
@@ -10,4 +10,5 @@ class GetToDoByUserUsecase:
 
     async def execute(self, user_id: int) -> list[ToDo]:
         user = await self._user_service.get_user(user_id=user_id)
+        print(f"usecase user: {user}")
         return await self._todo_service.get_todo_list_by_user(user=user)

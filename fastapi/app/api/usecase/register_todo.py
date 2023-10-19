@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from app.domain.todo.todo import ToDo
-from app.domain.todo.todo_schema import ToDoCreate
-from app.domain.users.user_service import UserService
-from app.domain.todo.todo_service import ToDoService
+from app.domain.todo import ToDo
+from app.api.v1.request.todo_request import ToDoCommand
+from app.service.user_service import UserService
+from app.service.todo_service import ToDoService
 
 
 class RegisterToDoUsecase(object):
@@ -11,11 +11,7 @@ class RegisterToDoUsecase(object):
         self._user_service = user_service
         self._todo_service = todo_service
 
-    async def execute(
-        self, user_id: int, to_do_create: ToDoCreate, created_now: datetime
-    ):
+    async def execute(self, user_id: int, command: ToDoCommand, created_now: datetime):
         user = await self._user_service.get_user(user_id=user_id)
-        new_todo = ToDo.create(
-            content=to_do_create.content, created=created_now, user_id=user.id
-        )
+        new_todo = ToDo.create(command=command, created=created_now, user=user)
         return await self._todo_service.create_todo(new_todo)

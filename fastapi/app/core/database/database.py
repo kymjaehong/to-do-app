@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session, scoped_session
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, registry
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_scoped_session,
@@ -20,6 +20,8 @@ sync_session: Union[Session, scoped_session] = scoped_session(
     session_factory=sync_session_factory, scopefunc=get_sync_session_id
 )
 
+Base = declarative_base()
+
 MYSQL_ASYNC_URL = f"{config.ASYNC_ENGINE}://{config.USERNAME}:{config.PASSWORD}@{config.HOST}:{config.PORT}/{config.NAME}"
 
 async_engine = create_async_engine(MYSQL_ASYNC_URL, echo=True)
@@ -30,4 +32,5 @@ async_session: Union[AsyncSession, async_scoped_session] = async_scoped_session(
     session_factory=async_session_factory, scopefunc=get_async_session_id
 )
 
-Base = declarative_base()
+# imperative mapper (classic)
+mapper_registry = registry()

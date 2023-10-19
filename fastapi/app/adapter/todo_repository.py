@@ -5,9 +5,10 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
 )
 from sqlalchemy import select
+from sqlalchemy.orm import lazyload
 
-from app.domain.todo.todo import ToDo
-from app.domain.users.users import User
+from app.domain.todo import ToDo
+from app.domain.user import User
 
 
 class AbstractToDoRepostiroy(ABC):
@@ -33,18 +34,21 @@ class ToDoRepository(AbstractToDoRepostiroy):
         self._db = async_db
 
     async def find_by_id(self, to_do_id: int) -> ToDo:
-        row_todo = await self._db.execute(
-            select(ToDo).join(ToDo.user).where(ToDo.id == to_do_id)
-        )
-        todo = row_todo.scalar()
+        todo = await self._db.scalar(select(ToDo).where(ToDo.id == to_do_id))
         if todo is None:
             raise Exception(f"not found by id {to_do_id}")
         return todo
 
+    """
+    N:1 관계에서 lazy loading을 하지 않으면, 무한 루프에 빠지게 된다.
+    """
+
     async def find_all_by_user(self, user: User) -> list[ToDo]:
-        row_todo_list = await self._db.execute(select(ToDo).where(ToDo.user == user))
-        todo_list = row_todo_list.scalars().all()
-        return todo_list
+        print(f"parameter user: {user}")
+        todo_list = await self._db.scalars(
+            select(ToDo).options(lazyload(ToDo.user)).where(ToDo.user_id == user.id)
+        )
+        return todo_list.unique().all()
 
     async def save(self, to_do: ToDo):
         async with self._db as session:
@@ -54,10 +58,10 @@ class ToDoRepository(AbstractToDoRepostiroy):
     async def find_all_by_user_and_keyword(
         self, user: User, keyword: str
     ) -> list[ToDo]:
-        row_todo_list = await self._db.execute(
+        todo_list = await self._db.scalars(
             select(ToDo)
+            .options(lazyload(ToDo.user))
             .where(ToDo.user == user)
             .where(ToDo.content.like("%" + keyword + "%"))
         )
-        todo_list = row_todo_list.scalars().all()
-        return todo_list
+        return todo_list.all()

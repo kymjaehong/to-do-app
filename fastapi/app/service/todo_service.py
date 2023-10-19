@@ -1,6 +1,6 @@
-from app.domain.todo.todo_repository import AbstractToDoRepostiroy
-from app.domain.todo.todo import ToDo
-from app.domain.users.users import User
+from app.adapter.todo_repository import AbstractToDoRepostiroy
+from app.domain.todo import ToDo
+from app.domain.user import User
 
 
 class ToDoService:

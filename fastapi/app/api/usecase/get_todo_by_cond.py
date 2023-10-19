@@ -1,6 +1,6 @@
-from app.domain.users.user_service import UserService
-from app.domain.todo.todo_service import ToDoService
-from app.domain.todo.todo import ToDo
+from app.service.user_service import UserService
+from app.service.todo_service import ToDoService
+from app.domain.todo import ToDo
 
 
 class GetToDoByCondUsecase:

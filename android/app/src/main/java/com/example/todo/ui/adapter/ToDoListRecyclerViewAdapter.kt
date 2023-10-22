@@ -1,4 +1,4 @@
-package com.example.todo.domain.adapter
+package com.example.todo.presentation_layer.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
-import com.example.todo.ToDoActivity
-import com.example.todo.data.response.ToDoResponse
+import com.example.todo.ui.ToDoActivity
+import com.example.todo.data_layer.dto.response.ToDoResponse
 
 class ToDoListRecyclerViewAdapter(
     val toDoList: List<ToDoResponse>,

@@ -1,12 +1,12 @@
-package com.example.todo.viewmodel
+package com.example.todo.presentation_layer.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.api.ApiResponse
+import com.example.todo.api.ApiState
 import com.example.todo.api.RetrofitRepository
-import com.example.todo.data.response.ToDoResponse
+import com.example.todo.data_layer.dto.response.ToDoResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,14 +21,14 @@ class ListViewModel @Inject constructor(
 
     ): ViewModel() {
 
-    private val _toDoList = MutableStateFlow<ApiResponse<List<ToDoResponse>>>(ApiResponse.Loading())
+    private val _toDoList = MutableStateFlow<ApiState<List<ToDoResponse>>>(ApiState.Loading())
     val todoList = _toDoList.asStateFlow()
 
     fun getToDoList(user_id: Int) {
         viewModelScope.launch {
             retrofitRepository.getToDoList(user_id)
                 .catch { error ->
-                    _toDoList.value = ApiResponse.Error(error.message!!)
+                    _toDoList.value = ApiState.Error(error.message!!)
                 }
                 .collect { values ->
                     Log.d("logcat","listViewModel getToDoList call")
@@ -38,7 +38,7 @@ class ListViewModel @Inject constructor(
     }
 
     fun toLoadingApiResponse() {
-        _toDoList.value = ApiResponse.Loading()
+        _toDoList.value = ApiState.Loading()
         Log.d("logcat","set apiResponse loading")
     }
 

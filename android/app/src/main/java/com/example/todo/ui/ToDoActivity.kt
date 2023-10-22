@@ -1,4 +1,4 @@
-package com.example.todo
+package com.example.todo.presentation_layer
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,15 +10,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todo.api.ApiResponse
+import com.example.todo.api.ApiState
 import com.example.todo.databinding.ActivityToDoBinding
-import com.example.todo.ui.BaseActivity
-import com.example.todo.viewmodel.ListViewModel
+import com.example.todo.presentation_layer.ui.BaseActivity
+import com.example.todo.presentation_layer.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.example.todo.domain.adapter.ToDoListRecyclerViewAdapter
-import com.example.todo.viewmodel.SearchViewModel
-import com.example.todo.viewmodel.UpdateViewModel
+import com.example.todo.presentation_layer.adapter.ToDoListRecyclerViewAdapter
+import com.example.todo.presentation_layer.viewmodel.SearchViewModel
+import com.example.todo.presentation_layer.viewmodel.UpdateViewModel
 
 @AndroidEntryPoint
 class ToDoActivity : BaseActivity() {
@@ -50,7 +50,7 @@ class ToDoActivity : BaseActivity() {
 
                     todoList.collect { apiResponse ->
                         when (apiResponse) {
-                            is ApiResponse.Success -> {
+                            is ApiState.Success -> {
                                 apiResponse.data?.let { values ->
                                     Log.d("logcat","todo activity: $values")
                                     toDoRecyclerView.adapter = ToDoListRecyclerViewAdapter(
@@ -61,11 +61,11 @@ class ToDoActivity : BaseActivity() {
                                 }
                                 toLoadingApiResponse()
                             }
-                            is ApiResponse.Error -> {
+                            is ApiState.Error -> {
                                 Log.e("logcat", "${apiResponse.message}")
                                 toLoadingApiResponse()
                             }
-                            is ApiResponse.Loading -> {}
+                            is ApiState.Loading -> {}
                         }
                     }
                 }
@@ -100,7 +100,7 @@ class ToDoActivity : BaseActivity() {
 
             searchTodoList.collect { apiResponse ->
                 when (apiResponse) {
-                    is ApiResponse.Success -> {
+                    is ApiState.Success -> {
                         apiResponse.data?.let { values ->
                             toDoRecyclerView.adapter = ToDoListRecyclerViewAdapter(
                                 values,
@@ -111,12 +111,12 @@ class ToDoActivity : BaseActivity() {
                         toLoadingApiResponse()
                     }
 
-                    is ApiResponse.Error -> {
+                    is ApiState.Error -> {
                         Log.e("logcat", "${apiResponse.message}")
                         toLoadingApiResponse()
                     }
 
-                    is ApiResponse.Loading -> {}
+                    is ApiState.Loading -> {}
                 }
             }
         }
@@ -130,12 +130,12 @@ class ToDoActivity : BaseActivity() {
                     updateToDoList(to_do_id)
                     updateTodoList.collect { apiResponse ->
                         when (apiResponse) {
-                            is ApiResponse.Success -> {}
-                            is ApiResponse.Error -> {
+                            is ApiState.Success -> {}
+                            is ApiState.Error -> {
                                 Log.e("logcat", "${apiResponse.message}")
                                 toLoadingApiResponse()
                             }
-                            is ApiResponse.Loading -> {
+                            is ApiState.Loading -> {
                                 Log.d("logcat", "update complete after~")
                                 clickSearchBtn()
                             }

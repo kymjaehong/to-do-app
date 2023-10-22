@@ -1,8 +1,9 @@
-package com.example.todo
+package com.example.todo.presentation_layer
 
 import androidx.navigation.fragment.findNavController
+import com.example.todo.R
 import com.example.todo.databinding.ActivityNavigationExampleBinding
-import com.example.todo.ui.BaseActivity
+import com.example.todo.presentation_layer.ui.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

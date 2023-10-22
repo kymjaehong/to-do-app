@@ -1,17 +1,13 @@
-package com.example.todo
+package com.example.todo.presentation_layer
 
 import android.os.Bundle
 import android.util.Log
-import android.window.OnBackInvokedDispatcher
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.core.os.BuildCompat
 import androidx.core.widget.doAfterTextChanged
-import com.example.todo.data.request.ToDoWriteRequest
+import com.example.todo.data_layer.dto.request.ToDoWriteRequest
 import com.example.todo.databinding.ActivityToDoWriteBinding
-import com.example.todo.ui.BaseActivity
-import com.example.todo.viewmodel.WriteViewModel
+import com.example.todo.presentation_layer.ui.BaseActivity
+import com.example.todo.presentation_layer.viewmodel.WriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,12 +1,12 @@
-package com.example.todo.viewmodel
+package com.example.todo.presentation_layer.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.api.ApiResponse
+import com.example.todo.api.ApiState
 import com.example.todo.api.RetrofitRepository
-import com.example.todo.data.response.ToDoResponse
+import com.example.todo.data_layer.dto.response.ToDoResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,14 +22,14 @@ class SearchViewModel @Inject constructor(
 
     ): ViewModel() {
 
-    private val _searchToDoList = MutableStateFlow<ApiResponse<List<ToDoResponse>>>(ApiResponse.Loading())
+    private val _searchToDoList = MutableStateFlow<ApiState<List<ToDoResponse>>>(ApiState.Loading())
     val searchTodoList = _searchToDoList.asStateFlow()
 
     fun searchToDoList(user_id: Int, keyword: String) {
         viewModelScope.launch {
             retrofitRepository.searchToDoList(user_id = user_id, keyword = keyword)
                 .catch { error ->
-                    _searchToDoList.value = ApiResponse.Error(error.message!!)
+                    _searchToDoList.value = ApiState.Error(error.message!!)
                 }
                 .collectLatest { values ->
                     Log.d("logcat","listViewModel getToDoList call")
@@ -39,7 +39,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun toLoadingApiResponse() {
-        _searchToDoList.value = ApiResponse.Loading()
+        _searchToDoList.value = ApiState.Loading()
         Log.d("logcat","set apiResponse loading")
     }
 

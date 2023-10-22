@@ -1,10 +1,10 @@
-package com.example.todo.viewmodel
+package com.example.todo.presentation_layer.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.api.ApiResponse
+import com.example.todo.api.ApiState
 import com.example.todo.api.RetrofitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +22,8 @@ class UpdateViewModel @Inject constructor(
 
     ): ViewModel() {
 
-    private val _updateToDoList = MutableStateFlow<ApiResponse<Any>>(ApiResponse.Loading())
-    val updateTodoList: StateFlow<ApiResponse<Any>> = _updateToDoList
+    private val _updateToDoList = MutableStateFlow<ApiState<Any>>(ApiState.Loading())
+    val updateTodoList: StateFlow<ApiState<Any>> = _updateToDoList
 
     fun updateToDoList(to_do_id: Int) {
         viewModelScope.launch {
@@ -31,7 +31,7 @@ class UpdateViewModel @Inject constructor(
                 .flowOn(Dispatchers.Main.immediate)
                 .catch { error ->
                     Log.e("logcat","updateViewModel $error")
-                    _updateToDoList.value = ApiResponse.Error(error.message!!)
+                    _updateToDoList.value = ApiState.Error(error.message!!)
                 }
                 .collect { values ->
                     Log.d("logcat","updateViewModel updateToDoList call")
@@ -42,7 +42,7 @@ class UpdateViewModel @Inject constructor(
     }
 
     fun toLoadingApiResponse() {
-        _updateToDoList.value = ApiResponse.Loading()
+        _updateToDoList.value = ApiState.Loading()
         Log.d("logcat","set apiResponse loading")
     }
 

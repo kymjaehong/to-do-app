@@ -1,10 +1,10 @@
-package com.example.todo.ui
+package com.example.todo.presentation_layer.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.todo.databinding.FragmentNavigationExampleBinding
-import com.example.todo.viewmodel.NavigationExampleViewModel
+import com.example.todo.presentation_layer.viewmodel.NavigationExampleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

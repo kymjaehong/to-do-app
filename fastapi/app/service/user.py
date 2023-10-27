@@ -1,4 +1,4 @@
-from app.adapter.user_repository import AbstractUserRepository
+from app.adapter.user import AbstractUserRepository
 from app.domain.user import User
 from app.api.v1.request.user_request import UserCommand
 

@@ -8,7 +8,7 @@ from dependency_injector.wiring import Provide, inject
 
 from app.core.dependency_container import Container
 from app.api.v1.request.todo_request import ToDoCommand
-from app.service.todo_service import ToDoService
+from app.service.todo import ToDoService
 from app.api.usecase.get_todo_by_user import GetToDoByUserUsecase
 from app.api.usecase.register_todo import RegisterToDoUsecase
 from app.api.usecase.get_todo_by_cond import GetToDoByCondUsecase

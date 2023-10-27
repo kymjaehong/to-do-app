@@ -1,5 +1,5 @@
-from app.service.user_service import UserService
-from app.service.todo_service import ToDoService
+from app.service.user import UserService
+from app.service.todo import ToDoService
 from app.domain.todo import ToDo
 
 

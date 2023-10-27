@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from dependency_injector.wiring import Provide, inject
 
 from app.core.dependency_container import Container
-from app.service.user_service import UserService
+from app.service.user import UserService
 from app.api.v1.request.user_request import UserCommand
 from app.api.api_response import ApiResponse
 

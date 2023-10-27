@@ -2,8 +2,8 @@ from datetime import datetime
 
 from app.domain.todo import ToDo
 from app.api.v1.request.todo_request import ToDoCommand
-from app.service.user_service import UserService
-from app.service.todo_service import ToDoService
+from app.service.user import UserService
+from app.service.todo import ToDoService
 
 
 class RegisterToDoUsecase(object):

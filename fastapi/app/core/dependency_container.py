@@ -1,10 +1,10 @@
 from dependency_injector import containers, providers
 
 from app.core.database.database import async_session
-from app.adapter.todo_repository import ToDoRepository
-from app.adapter.user_repository import UserRepository
-from app.service.todo_service import ToDoService
-from app.service.user_service import UserService
+from app.adapter.todo import ToDoRepository
+from app.adapter.user import UserRepository
+from app.service.todo import ToDoService
+from app.service.user import UserService
 from app.api.usecase.get_todo_by_user import GetToDoByUserUsecase
 from app.api.usecase.register_todo import RegisterToDoUsecase
 from app.api.usecase.get_todo_by_cond import GetToDoByCondUsecase

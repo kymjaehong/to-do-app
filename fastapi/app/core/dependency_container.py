@@ -13,8 +13,8 @@ from app.api.usecase.get_todo_by_cond import GetToDoByCondUsecase
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
-            "app.api.v1.controller.todo_controller",
-            "app.api.v1.controller.user_controller",
+            "app.api.v1.endpoint.todo",
+            "app.api.v1.endpoint.user",
         ]
     )
     # async db

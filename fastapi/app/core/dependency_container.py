@@ -8,7 +8,6 @@ from app.service.user import UserService
 from app.api.usecase.get_todo_by_user import GetToDoByUserUsecase
 from app.api.usecase.register_todo import RegisterToDoUsecase
 from app.api.usecase.get_todo_by_cond import GetToDoByCondUsecase
-from app.core.security.token import ValidateToken
 
 
 class Container(containers.DeclarativeContainer):
@@ -18,8 +17,6 @@ class Container(containers.DeclarativeContainer):
             "app.api.v1.endpoint.user",
         ]
     )
-    # token
-    validate_token = providers.Singleton(ValidateToken)
 
     # async db
     async_db = providers.Singleton(async_session)

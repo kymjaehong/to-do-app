@@ -2,7 +2,6 @@ from fastapi import Depends, APIRouter
 from fastapi.encoders import jsonable_encoder
 
 from datetime import datetime
-from sqlalchemy.sql import func
 
 from dependency_injector.wiring import Provide, inject
 

@@ -10,6 +10,13 @@ class ToDoService:
     async def get_todo_list_by_user(self, user: User) -> list[ToDo]:
         return await self._to_do_repository.find_all_by_user(user=user)
 
+    async def get_todo_list_by_user_and_is_completed(
+        self, user: User, is_completed: bool | None
+    ) -> list[ToDo]:
+        return await self._to_do_repository.find_all_by_user_and_is_completed(
+            user=user, is_completed=is_completed
+        )
+
     async def search_todo_list(self, user: User, keyword: str) -> list[ToDo]:
         return await self._to_do_repository.find_all_by_user_and_keyword(
             user=user, keyword=keyword

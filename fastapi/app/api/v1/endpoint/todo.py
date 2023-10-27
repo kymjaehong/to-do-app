@@ -18,16 +18,29 @@ from app.api.api_response import ApiResponse
 
 todo_router = APIRouter(prefix="/todo", tags=["todo"])
 
+"""
+완료 내역에 대해서 조회 가능
+all: 전체
+completed: 완료 내역
+not_yet: 미완료 내역
+"""
+is_completed_list = ["all", "completed", "not_yet"]
+
 
 @todo_router.get("/{user_id}", response_model=ApiResponse)
 @inject
 async def get_todo_list(
     user_id: int,
+    is_completed: str = "all",
     get_todo_by_user_usecase: GetToDoByUserUsecase = Depends(
         Provide[Container.get_todo_by_user_usecase]
     ),
 ) -> ApiResponse:
-    res = await get_todo_by_user_usecase.execute(user_id=user_id)
+    if is_completed not in is_completed_list:
+        raise Exception("잘못된 타입니다.")
+    res = await get_todo_by_user_usecase.execute(
+        user_id=user_id, is_completed=is_completed
+    )
     return ApiResponse.ok(data=jsonable_encoder(res))
 
 

@@ -5,9 +5,10 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
 )
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, contains_eager
 
 from app.domain.user import User
+from app.domain.todo import ToDo
 
 
 class AbstractUserRepository(ABC):
@@ -30,9 +31,25 @@ class UserRepository:
     """
 
     async def find_by_id(self, user_id: int) -> User:
-        user = await self._db.scalar(
+        eager_stmt = (
             select(User).options(joinedload(User.todo_list)).where(User.id == user_id)
         )
+        """
+        [eager load]
+        orm mapping에서 연관된 테이블의 where 절을 사용해야 할 때,
+        직접 join을 해야 한다.
+        직접 join을 하지 않으면, 이상한 객체를 가져온다. (eager load도 이와 같다.)
+
+        eager loading의 경우, joinedload 대신 contains_eager를 사용한다.
+        """
+        multi_where_stmt = (
+            select(User)
+            .outerjoin(ToDo)
+            .options(contains_eager(User.todo_list))
+            .where(ToDo.is_complete == True)
+            .where(User.id == user_id)
+        )
+        user = await self._db.scalar(eager_stmt)
         return user
 
     async def save(self, user: User) -> None:

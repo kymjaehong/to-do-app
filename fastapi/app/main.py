@@ -1,13 +1,13 @@
 import time
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware import Middleware
+from dependency_injector.wiring import Provide
 
 from app.api.router import v1_router
 from app.core.middleware.sqlalchemy import SQLAlchemyMiddleware
 from app.core.dependency_container import Container
 from app.api.api_response import ApiResponse
 from app.adapter.orm import todo_orm_mapper
-
 
 app = FastAPI(
     title="To-Do App",
@@ -35,4 +35,8 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-app.include_router(v1_router, prefix="/api/v1")
+app.include_router(
+    v1_router,
+    prefix="/api/v1",
+    dependencies=[Depends(Provide[Container.get_todo_by_user_usecase])],
+)

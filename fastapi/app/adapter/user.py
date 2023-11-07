@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
 )
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.orm import joinedload, contains_eager, contains_alias
 
 from app.domain.user import User
 from app.domain.todo import ToDo
@@ -45,10 +45,10 @@ class UserRepository:
         multi_where_stmt = (
             select(User)
             .outerjoin(ToDo)
-            .options(contains_eager(User.todo_list))
+            .options(contains_alias(User.todo_list))
             .where(ToDo.is_complete == True, User.id == user_id)
         )
-        user = await self._db.scalar(eager_stmt)
+        user = await self._db.scalar(multi_where_stmt)
         return user
 
     async def save(self, user: User) -> None:

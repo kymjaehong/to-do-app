@@ -46,8 +46,7 @@ class UserRepository:
             select(User)
             .outerjoin(ToDo)
             .options(contains_eager(User.todo_list))
-            .where(ToDo.is_complete == True)
-            .where(User.id == user_id)
+            .where(ToDo.is_complete == True, User.id == user_id)
         )
         user = await self._db.scalar(eager_stmt)
         return user

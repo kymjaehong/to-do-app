@@ -67,8 +67,7 @@ class ToDoRepository(AbstractToDoRepostiroy):
         multi_where_stmt = (
             select(ToDo)
             .outerjoin(User)
-            .where(ToDo.user == user)
-            .where(User.name.like("%" + "홍" + "%"))
+            .where(ToDo.user == user, User.name.like("%" + "홍" + "%"))
             .options(contains_alias(ToDo.user))
         )
         """
@@ -98,8 +97,7 @@ class ToDoRepository(AbstractToDoRepostiroy):
         stmt = (
             select(ToDo)
             .options(lazyload(ToDo.user))
-            .where(ToDo.user == user)
-            .where(ToDo.content.like("%" + keyword + "%"))
+            .where(ToDo.user == user, ToDo.content.like("%" + keyword + "%"))
         )
         todo_list = await self._db.scalars(stmt)
         return todo_list.all()

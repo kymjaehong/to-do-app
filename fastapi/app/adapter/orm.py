@@ -22,7 +22,7 @@ todo_table = Table(
     Column("content", String(255), nullable=False),
     Column("is_complete", Boolean, nullable=False, default=False),
     Column("created", DateTime, nullable=False, default=func.now()),
-    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("user_id", ForeignKey("users.id")),
 )
 
 
@@ -30,10 +30,10 @@ def todo_orm_mapper():
     mapper_registry.map_imperatively(
         User,
         user_table,
-        properties={"todo_list": relationship(ToDo, backref="users")},
+        properties={"todo_list": relationship(ToDo, back_populates="user")},
     )
     mapper_registry.map_imperatively(
         ToDo,
         todo_table,
-        properties={"user": relationship(User, backref="to_do")},
+        properties={"user": relationship(User, back_populates="todo_list")},
     )

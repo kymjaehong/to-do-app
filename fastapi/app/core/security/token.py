@@ -2,6 +2,7 @@ import time
 import jwt
 from fastapi import security, Request
 
+
 """
 Security
 """
@@ -18,22 +19,23 @@ class ValidateToken:
     def __call__(self, request: Request):
         ACCESS_URL_PATH = {
             "user": ["login"],
-            "todo": [],
+            # "todo": [],
         }
 
         request_url_path = request.url.path
+
         """
         /api/v1/user/...
         """
         url_path_list = request_url_path.split("/")
+        print(f"split / url: {url_path_list}")
 
-        """
-        1. root url path가 아닌 경우
-        2. 허용되지 않는 url path에 포함되는 경우
-        """
-        if url_path_list[4] in ACCESS_URL_PATH[url_path_list[3]]:
+        if (
+            url_path_list[3] in ACCESS_URL_PATH.keys()
+            and url_path_list[4] in ACCESS_URL_PATH[url_path_list[3]]
+        ):
             # 토큰 검증을 거치지 않는 URL
-            print(f"토큰 검증을 거치지 않는 URL Path: {url_path_list[4]}")
+            print(f"토큰 검증을 거치지 않는 URL Path: {request_url_path}")
             self.access_url_path = True
 
         """

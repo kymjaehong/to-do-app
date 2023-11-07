@@ -5,7 +5,7 @@ from dependency_injector.wiring import Provide, inject
 
 from app.core.dependency_container import Container
 from app.service.user import UserService
-from app.api.v1.request.user_request import UserCommand
+from app.api.v1.request.user_request import UserCommand, LoginCommand
 from app.api.api_response import ApiResponse
 
 user_router = APIRouter(prefix="/user", tags=["user"])
@@ -57,12 +57,13 @@ def create_access_token(iat: float, user_id: int) -> str:
 @user_router.post("/login", response_model=ApiResponse)
 @inject
 async def login(
-    user_id: int, user_service: UserService = Depends(Provide[Container.user_service])
+    command: LoginCommand,
+    user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> ApiResponse:
     iat = time.time()
-    res = await user_service.get_user(user_id=user_id)
+    res = await user_service.get_user(user_id=command.user_id)
     if res:
-        token = create_access_token(iat=iat, user_id=user_id)
+        token = create_access_token(iat=iat, user_id=command.user_id)
         return ApiResponse.ok(data=jsonable_encoder(token))
     else:
-        return ApiResponse.error(status_code=405, message="존재하지 않는 아이디입니다.")
+        return ApiResponse.error(status_code=404, message="존재하지 않는 아이디입니다.")

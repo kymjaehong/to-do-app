@@ -1,6 +1,8 @@
 import time
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware import Middleware
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 
 from app.api.router import v1_router
 from app.core.middleware.sqlalchemy import SQLAlchemyMiddleware
@@ -25,10 +27,9 @@ app.container = dependency_container
 todo_orm_mapper()
 
 
-# 토큰 핸들러 수정 필요함!!!!!!!!!!!!!!
-# @app.exception_handler(Exception)
-# async def bankx_exception_handler(request: Request, e: Exception):
-#     return ApiResponse.error(status_code=405, message=e.args[0])
+@app.exception_handler(Exception)
+async def exception_handler(request: Request, e: Exception):
+    return JSONResponse(ApiResponse.error(status_code=404, message=e.args[0]).__dict__)
 
 
 @app.middleware("http")

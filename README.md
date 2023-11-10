@@ -1,5 +1,5 @@
 # To-do's boilerplate
-Android &amp; FastAPI
+FastAPI
 
 ```
 Dockerfile, MySQL localhost (111) error

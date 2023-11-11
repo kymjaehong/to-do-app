@@ -37,11 +37,10 @@ class ABCValidateToken:
 
         if access_token:
             to_decode = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
-            print(f"해독 >>>> {to_decode}")
+            logger.info(f"해독 >>>> {to_decode}")
 
             if to_decode["expiration_at"] > self.iat:
-                print(f"토큰 만료 전 입니다 >>> {to_decode['user_id']}")
-                return to_decode["user_id"]
+                logger.info(f"토큰 만료 전 입니다 >>> {to_decode['user_id']}")
             else:
                 """
                 refresh token을 사용하면, 추가 로직 생성

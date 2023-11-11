@@ -1,4 +1,5 @@
-import jwt, time
+import time
+from jose import jwt
 from fastapi import Depends, APIRouter
 from fastapi.encoders import jsonable_encoder
 from dependency_injector.wiring import Provide, inject
@@ -37,7 +38,7 @@ async def get_user(
     return ApiResponse.ok(data=jsonable_encoder(res))
 
 
-def create_access_token(iat: float, user_id: int) -> str:
+def generate_access_token(iat: float, user_id: int) -> str:
     payload = {
         "iss": "토큰 발급자의 해당 서비스 계정",
         "sub": "토큰 제목, 옵션",
@@ -49,7 +50,7 @@ def create_access_token(iat: float, user_id: int) -> str:
     }
     additional_headers = {"kid": "인증 서버 private key id"}
     encoded_jwt = jwt.encode(
-        payload=payload, key=SECRET_KEY, algorithm=ALGORITHM, headers=additional_headers
+        payload, SECRET_KEY, algorithm=ALGORITHM, headers=additional_headers
     )
     return encoded_jwt
 
@@ -63,7 +64,10 @@ async def login(
     iat = time.time()
     res = await user_service.get_user(user_id=command.user_id)
     if res:
-        token = create_access_token(iat=iat, user_id=command.user_id)
-        return ApiResponse.ok(data=jsonable_encoder(token))
+        """
+        refresh token을 사용한다면, 추가 생성
+        """
+        access_token = generate_access_token(iat=iat, user_id=command.user_id)
+        return ApiResponse.ok(data=jsonable_encoder(access_token))
     else:
         return ApiResponse.error(status_code=404, message="존재하지 않는 아이디입니다.")

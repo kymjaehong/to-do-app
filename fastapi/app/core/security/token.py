@@ -1,22 +1,61 @@
-import time
-import jwt
-from fastapi import security, Request
+import time, logging
+from jose import jwt
+from fastapi import security, Request, Depends
 
+logger = logging.getLogger(__name__)
 
 """
 Security
 """
 SECRET_KEY = "World!"
 ALGORITHM = "HS256"
-oauth2_scheme = security.OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = security.OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 
-class ValidateToken:
+async def get_token_data(request: Request, iat: float):
+    # oauth 코드 활용
+    authorization = request.headers["Authorization"]
+    if authorization:
+        scheme, _, param = authorization.partition(" ")
+        logger.info(f"header: {scheme}, token: {param}")
+
+        if param and scheme.lower() == "bearer":
+            to_decode = jwt.decode(param, SECRET_KEY, algorithms=ALGORITHM)
+            logger.info(f"만료일 확인 {to_decode['expiration_at']} > {iat}")
+            if to_decode["expiration_at"] > iat:
+                return to_decode["data"]
+
+
+class ABCValidateToken:
     access_url_path = False
     # 토큰 검증 요청 시간
     iat = time.time()
 
-    def __call__(self, request: Request):
+    def validate_token(self, access_token: str | None):
+        if not access_token and not self.access_url_path:
+            raise Exception("토큰이 필요한 URL 입니다.")
+
+        if access_token:
+            to_decode = jwt.decode(access_token, SECRET_KEY, algorithms=ALGORITHM)
+            print(f"해독 >>>> {to_decode}")
+
+            if to_decode["expiration_at"] > self.iat:
+                print(f"토큰 만료 전 입니다 >>> {to_decode['user_id']}")
+                return to_decode["user_id"]
+            else:
+                """
+                refresh token을 사용하면, 추가 로직 생성
+                """
+                raise jwt.ExpiredSignatureError("토큰이 만료되었습니다.")
+
+
+class MyValidateToken(ABCValidateToken):
+    def __init__(self):
+        super().__init__()
+
+    def __call__(
+        self, request: Request, access_token: str | None = Depends(oauth2_scheme)
+    ):
         ACCESS_URL_PATH = {
             "user": ["login"],
             # "todo": [],
@@ -38,43 +77,5 @@ class ValidateToken:
             print(f"토큰 검증을 거치지 않는 URL Path: {request_url_path}")
             self.access_url_path = True
 
-        """
-        허용되는 url은 pass
-        """
-        if self.access_url_path:
-            return
-
-        """
-        헤더에서 토큰 가져오기
-
-        fastapi에서 제공하는 OAuth~Bearer를 사용하면, 이런 구현은 필요 없다.
-        """
-        headers = request.scope["headers"]
-        authorization_check = False  # 토큰 확인
-
-        for header in headers:
-            if header[0].decode("utf-8") == "authorization":
-                authorization_check = True
-                value: list[str] = header[1].decode("utf-8").split(" ")
-
-                if value[0] == "Bearer":
-                    print(f"now access token type >>> {value[1]}")
-
-                    get_user_id = self.validate_token(access_token=value[1])
-                    if get_user_id is None:
-                        raise jwt.PyJWTError("확인되지 않은 회원 아이디입니다.")
-                else:
-                    raise jwt.PyJWTError("잘못된 암호 알고리즘입니다.")
-        if not authorization_check:
-            raise jwt.PyJWTError("토큰이 필요합니다.")
-
-    def validate_token(self, access_token: str) -> int | None:
-        to_decode = jwt.decode(jwt=access_token, key=SECRET_KEY, algorithms=ALGORITHM)
-        print(f"해독 >>>> {to_decode}")
-
-        if to_decode["expiration_at"] > self.iat:
-            print(f"토큰 만료 전 입니다 >>> {to_decode['user_id']}")
-            return to_decode["user_id"]
-
-        else:
-            raise jwt.ExpiredSignatureError("토큰이 만료되었습니다.")
+        # ABC 클래스
+        self.validate_token(access_token=access_token)

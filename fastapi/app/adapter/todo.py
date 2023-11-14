@@ -39,10 +39,12 @@ class ToDoRepository(AbstractToDoRepostiroy):
         self._db = async_db
 
     async def find_by_id(self, to_do_id: int) -> ToDo:
-        todo = await self._db.execute(select(ToDo).where(ToDo.id == to_do_id))
+        stmt = select(ToDo).where(ToDo.id == to_do_id)
+        todo = await self._db.execute(stmt)
+        todo = todo.scalar()
         if todo is None:
             raise Exception(f"not found by id {to_do_id}")
-        return todo.scalar()
+        return todo
 
     async def find_all_by_user(self, user: User) -> list[ToDo]:
         stmt = select(ToDo).where(ToDo.user_id == user.id)

@@ -2,6 +2,7 @@ import time
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware import Middleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 import logging
 
 from app.api.router import v1_router
@@ -32,6 +33,20 @@ app.container = dependency_container
 
 # imperative orm mappter (classic)
 todo_orm_mapper()
+
+
+@app.exception_handler(RequestValidationError)
+async def exception_handler(request: Request, e: RequestValidationError):
+    error = e.errors()[0]
+    error_type = error["type"]
+    error_loc = error["loc"]
+    error_msg = error["msg"]
+
+    return JSONResponse(
+        ApiResponse.error(
+            status_code=404, message=f"{error_type}: {error_loc}, {error_msg}"
+        ).__dict__
+    )
 
 
 @app.exception_handler(Exception)

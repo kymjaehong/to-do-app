@@ -48,8 +48,8 @@ class UserRepository:
             .options(contains_eager(User.todo_list))
             .where(ToDo.is_complete == True, User.id == user_id)
         )
-        user = await self._db.scalar(eager_stmt)
-        return user
+        user = await self._db.execute(eager_stmt)
+        return user.scalar()
 
     async def save(self, user: User) -> None:
         async with self._db as session:

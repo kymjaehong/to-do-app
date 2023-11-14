@@ -35,5 +35,5 @@ def todo_orm_mapper():
     mapper_registry.map_imperatively(
         ToDo,
         todo_table,
-        properties={"user": relationship(User, back_populates="todo_list")},
+        properties={"user": relationship(User, back_populates="todo_list", lazy=True)},
     )

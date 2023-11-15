@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
 )
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.orm import joinedload, contains_eager, with_loader_criteria
 
 from app.domain.user import User
 from app.domain.todo import ToDo
@@ -41,12 +41,16 @@ class UserRepository:
         직접 join을 하지 않으면, 이상한 객체를 가져온다. (eager load도 이와 같다.)
 
         eager loading의 경우, joinedload 대신 contains_eager를 사용한다.
+        명시적 조인을 했을 때, joinedload를 사용하면 조인이 두 번 발생한다.
         """
         multi_where_stmt = (
             select(User)
             .outerjoin(ToDo)
-            .options(contains_eager(User.todo_list))
-            .where(ToDo.is_complete == True, User.id == user_id)
+            .options(
+                with_loader_criteria(ToDo, ToDo.is_complete == True),
+                contains_eager(User.todo_list),
+            )
+            .where(User.id == user_id)
         )
         user = await self._db.execute(eager_stmt)
         return user.scalar()

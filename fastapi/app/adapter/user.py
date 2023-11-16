@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
 )
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload, contains_eager, with_loader_criteria
+from sqlalchemy.orm import joinedload, contains_eager
 
 from app.domain.user import User
 from app.domain.todo import ToDo
@@ -45,9 +45,8 @@ class UserRepository:
         """
         multi_where_stmt = (
             select(User)
-            .outerjoin(ToDo)
+            .outerjoin(ToDo, (User.id == ToDo.user_id) & (ToDo.is_complete == True))
             .options(
-                with_loader_criteria(ToDo, ToDo.is_complete == True),
                 contains_eager(User.todo_list),
             )
             .where(User.id == user_id)

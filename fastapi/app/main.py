@@ -9,7 +9,6 @@ from app.api.router import v1_router
 from app.core.middleware.sqlalchemy import SQLAlchemyMiddleware
 from app.core.dependency_container import Container
 from app.api.api_response import ApiResponse
-from app.adapter.orm import todo_orm_mapper
 
 from app.core.security.token import MyValidateToken
 
@@ -30,9 +29,6 @@ app = FastAPI(
 )
 dependency_container = Container()
 app.container = dependency_container
-
-# imperative orm mappter (classic)
-todo_orm_mapper()
 
 
 @app.exception_handler(RequestValidationError)

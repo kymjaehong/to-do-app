@@ -1,37 +1,21 @@
-from datetime import datetime
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import String, Integer, Boolean, ForeignKey
 
-from app.domain.user import User
-from app.api.v1.request.todo_request import ToDoCommand
-
-"""
-N:1 테이블의 경우,
-테이블에 1에 대한 PK를 FK로 가지고 있기 때문에, 이는 필드로 정한다.
-lazy loading을 위한 elationship에 필드를 선언해둔다.
-"""
+from app.domain.base import Base
 
 
-class ToDo:
-    def __init__(
-        self, id: int, content: str, is_complete: bool, created: datetime, user: User
-    ):
-        self.id = id
-        self.content = content
-        self.is_complete = is_complete
-        self.created = created
-        self.user_id = user.id
-        self.user = user  # relationship
+class ToDo(Base):
+    __tablename__ = "todo"
 
-    @classmethod
-    def _validate(cls) -> bool:
-        return True
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    content: Mapped[str] = mapped_column(String, nullable=False)
+    is_complete: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
 
-    @classmethod
-    def create(cls, command: ToDoCommand, created: datetime, user: User) -> "ToDo":
-        if not cls._validate():
-            raise Exception("validate Exception")
-        return cls(
-            id=0, content=command.content, is_complete=False, created=created, user=user
-        )
+    user: Mapped["User"] = relationship(back_populates="todos", lazy=True)
+
+    def __repr__(self) -> str:
+        return f"ToDo(id={self.id!r}, content={self.content!r}, is_complete={self.is_complete!r}, created_at={self.created_at!r}, modified_at={self.modified_at!r})"
 
     def update_is_complete(self):
         self.is_complete = not self.is_complete

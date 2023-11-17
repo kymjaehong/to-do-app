@@ -1,4 +1,4 @@
-from app.adapter.user import AbstractUserRepository
+from app.repository.user import AbstractUserRepository
 from app.domain.user import User
 from app.api.v1.request.user_request import UserCommand
 
@@ -11,5 +11,5 @@ class UserService:
         return await self._user_repository.find_by_id(user_id=user_id)
 
     async def create_user(self, command: UserCommand) -> None:
-        user = User.create(command=command)
+        user = User(**command.__dict__)
         return await self._user_repository.save(user=user)

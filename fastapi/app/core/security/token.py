@@ -56,7 +56,7 @@ class MyValidateToken(ABCValidateToken):
         self, request: Request, access_token: str | None = Depends(oauth2_scheme)
     ):
         ACCESS_URL_PATH = {
-            "user": ["login"],
+            "user": ["login", "register"],
             # "todo": [],
         }
 

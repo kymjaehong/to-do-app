@@ -1,8 +1,6 @@
 from fastapi import Depends, APIRouter
 from fastapi.encoders import jsonable_encoder
 
-from datetime import datetime
-
 from dependency_injector.wiring import Provide, inject
 
 from app.core.dependency_container import Container
@@ -65,10 +63,7 @@ async def register_todo(
         Provide[Container.register_todo_user_usecase]
     ),
 ) -> ApiResponse:
-    created_now = datetime.now()
-    res = await register_todo_usecase.execute(
-        user_id=user_id, command=command, created_now=created_now
-    )
+    res = await register_todo_usecase.execute(user_id=user_id, command=command)
     return ApiResponse.ok(data=jsonable_encoder(res))
 
 

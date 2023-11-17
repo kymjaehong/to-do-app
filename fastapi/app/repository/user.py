@@ -32,7 +32,7 @@ class UserRepository:
 
     async def find_by_id(self, user_id: int) -> User:
         eager_stmt = (
-            select(User).options(joinedload(User.todo_list)).where(User.id == user_id)
+            select(User).options(joinedload(User.todos)).where(User.id == user_id)
         )
         """
         [eager load]
@@ -47,7 +47,7 @@ class UserRepository:
             select(User)
             .outerjoin(ToDo, (User.id == ToDo.user_id) & (ToDo.is_complete == True))
             .options(
-                contains_eager(User.todo_list),
+                contains_eager(User.todos),
             )
             .where(User.id == user_id)
         )

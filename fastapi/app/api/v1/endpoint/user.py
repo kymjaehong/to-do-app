@@ -19,7 +19,7 @@ SECRET_KEY = "World!"
 ALGORITHM = "HS256"
 
 
-@user_router.post("/", response_model=ApiResponse)
+@user_router.post("/register", response_model=ApiResponse)
 @inject
 async def register(
     command: UserCommand,

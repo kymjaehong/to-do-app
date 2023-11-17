@@ -1,4 +1,4 @@
-from app.adapter.todo import AbstractToDoRepostiroy
+from app.repository.todo import AbstractToDoRepostiroy
 from app.domain.todo import ToDo
 from app.domain.user import User
 

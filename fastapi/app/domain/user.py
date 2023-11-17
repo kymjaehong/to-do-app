@@ -1,24 +1,21 @@
-from app.api.v1.request.user_request import UserCommand
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import Integer, String
 
-"""
-1:N 테이블의 경우
-eager loading을 위한 relationship 필드를 설정해둔다.
-"""
+from app.domain.todo import ToDo
+
+from app.domain.base import Base
 
 
-class User:
-    def __init__(self, id: int, phone_number: str, name: str):
-        self.id = id
-        self.phone_number = phone_number
-        self.name = name
-        self.todo_list = list()  # relationship
+class User(Base):
+    __tablename__ = "user"
 
-    @classmethod
-    def _validate(cls) -> bool:
-        return True
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    phone_number: Mapped[str] = mapped_column(String, nullable=False)
 
-    @classmethod
-    def create(cls, command: UserCommand) -> "User":
-        if not cls._validate():
-            raise Exception("validate Exception")
-        return cls(id=0, phone_number=command.phone_number, name=command.name)
+    todos: Mapped[list[ToDo]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"User(id={self.id!r}, name={self.name!r}, phone_number={self.phone_number!r}, created_at={self.created_at!r}, modified_at={self.modified_at!r})"

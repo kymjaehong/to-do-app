@@ -6,6 +6,9 @@ from app.domain.user import User
 from app.domain.todo import ToDo
 from app.core.database.database import mapper_registry
 
+"""Imperative mapping
+domain과 orm이 다를 시에 사용하는 것이 권장된다.
+"""
 user_table = Table(
     "users",
     mapper_registry.metadata,

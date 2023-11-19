@@ -21,9 +21,3 @@ class BaseMixIn:
 
 class Base(DeclarativeBase, BaseMixIn):
     pass
-    # created_at: Mapped[DateTime] = mapped_column(
-    #     nullable=False, server_default=func.now()
-    # )
-    # modified_at: Mapped[DateTime] = mapped_column(
-    #     nullable=False, server_default=func.now(), server_onupdate=func.now()
-    # )

@@ -1,5 +1,6 @@
 from uuid import uuid4
 from starlette.types import ASGIApp, Receive, Scope, Send
+from sqlalchemy.exc import DatabaseError
 
 from app.core.database.async_session import (
     set_async_session_context,
@@ -19,7 +20,7 @@ class SQLAlchemyMiddleware:
 
         try:
             await self.app(scope, receive, send)
-        except Exception as e:
+        except DatabaseError as e:
             await async_session.rollback()
             raise e
         finally:

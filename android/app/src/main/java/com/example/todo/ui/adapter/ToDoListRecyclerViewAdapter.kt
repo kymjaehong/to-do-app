@@ -1,4 +1,4 @@
-package com.example.todo.presentation_layer.adapter
+package com.example.todo.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.ui.ToDoActivity
-import com.example.todo.data_layer.dto.response.ToDoResponse
+import com.example.todo.data.dto.response.ToDoResponse
 
 class ToDoListRecyclerViewAdapter(
     val toDoList: List<ToDoResponse>,
@@ -84,7 +84,7 @@ class ToDoListRecyclerViewAdapter(
         }
         if (holder is ContentViewHolder) {
             holder.content.text = todo.content
-            if (todo.is_complete) {
+            if (todo.isComplete) {
                 holder.isComplete.setImageDrawable(
                     activity.resources.getDrawable(
                         R.drawable.btn_radio_check,

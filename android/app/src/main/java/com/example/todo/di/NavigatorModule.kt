@@ -1,2 +1,2 @@
-package com.example.todo.presentation_layer.di
+package com.example.todo.di
 

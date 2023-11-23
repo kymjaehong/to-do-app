@@ -1,13 +1,12 @@
-package com.example.todo.presentation_layer
+package com.example.todo.ui
 
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
-import com.example.todo.data_layer.dto.request.ToDoWriteRequest
+import com.example.todo.data.dto.request.ToDoWriteRequest
 import com.example.todo.databinding.ActivityToDoWriteBinding
-import com.example.todo.presentation_layer.ui.BaseActivity
-import com.example.todo.presentation_layer.viewmodel.WriteViewModel
+import com.example.todo.ui.viewmodel.WriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,7 +16,7 @@ class ToDoWriteActivity: BaseActivity() {
         ActivityToDoWriteBinding.inflate(layoutInflater)
     }
 
-    private val viewModel by viewModels<WriteViewModel>()
+    private val writeViewModel by viewModels<WriteViewModel>()
 
     var content: String = ""
 
@@ -33,10 +32,10 @@ class ToDoWriteActivity: BaseActivity() {
             val header = hashMapOf<String, String>()
             header["Authorization"] = "token " + "de3cc238e1e129ed0aec8ae60dd55b022fb41d11"
 
-            Log.d("logcat", "content: "+content)
+            Log.d("logcat", "content: $content")
             val toDoWriteRequest = ToDoWriteRequest(content)
 
-            viewModel.writeToDo(toDoWriteRequest)
+            writeViewModel.writeToDo(1, toDoWriteRequest)
             backPressed()
         }
     }

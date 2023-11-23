@@ -1,12 +1,11 @@
-package com.example.todo.presentation_layer.viewmodel
+package com.example.todo.ui.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.api.ApiState
-import com.example.todo.api.RetrofitRepository
-import com.example.todo.data_layer.dto.response.ToDoResponse
+import com.example.todo.data.dto.response.ToDoResponse
+import com.example.todo.presentation.repository.ToDoRepository
+import com.example.todo.utils.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,29 +15,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    private val retrofitRepository: RetrofitRepository,
-    private val savedStateHandle: SavedStateHandle,
-
+    private val toDoRepository: ToDoRepository
     ): ViewModel() {
 
-    private val _toDoList = MutableStateFlow<ApiState<List<ToDoResponse>>>(ApiState.Loading())
+    private val _toDoList = MutableStateFlow<DataState<List<ToDoResponse>>>(DataState.Loading)
     val todoList = _toDoList.asStateFlow()
 
     fun getToDoList(user_id: Int) {
         viewModelScope.launch {
-            retrofitRepository.getToDoList(user_id)
+            toDoRepository.getToDoList(user_id)
                 .catch { error ->
-                    _toDoList.value = ApiState.Error(error.message!!)
+                    _toDoList.value = DataState.Error(error)
                 }
                 .collect { values ->
                     Log.d("logcat","listViewModel getToDoList call")
                     _toDoList.value = values
-            }
+                }
         }
     }
 
     fun toLoadingApiResponse() {
-        _toDoList.value = ApiState.Loading()
+        _toDoList.value = DataState.Loading
         Log.d("logcat","set apiResponse loading")
     }
 

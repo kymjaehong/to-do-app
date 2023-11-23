@@ -1,4 +1,4 @@
-package com.example.todo.data_layer.room
+package com.example.todo.data.room
 
 interface ToDoDao {
 }

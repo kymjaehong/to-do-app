@@ -1,4 +1,4 @@
-package com.example.todo.data_layer.dto.request
+package com.example.todo.data.dto.request
 
 data class ToDoWriteRequest(
     val content: String,

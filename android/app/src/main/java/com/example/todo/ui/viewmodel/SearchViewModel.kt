@@ -1,12 +1,11 @@
-package com.example.todo.presentation_layer.viewmodel
+package com.example.todo.ui.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.api.ApiState
-import com.example.todo.api.RetrofitRepository
-import com.example.todo.data_layer.dto.response.ToDoResponse
+import com.example.todo.data.dto.response.ToDoResponse
+import com.example.todo.presentation.repository.ToDoRepository
+import com.example.todo.utils.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,21 +16,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val retrofitRepository: RetrofitRepository,
-    private val savedStateHandle: SavedStateHandle,
-
+    private val toDoRepository: ToDoRepository
     ): ViewModel() {
 
-    private val _searchToDoList = MutableStateFlow<ApiState<List<ToDoResponse>>>(ApiState.Loading())
+    private val _searchToDoList = MutableStateFlow<DataState<List<ToDoResponse>>>(DataState.Loading)
     val searchTodoList = _searchToDoList.asStateFlow()
 
-    fun searchToDoList(user_id: Int, keyword: String) {
+    fun searchToDoList(userId: Int, keyword: String) {
         viewModelScope.launch {
-            retrofitRepository.searchToDoList(user_id = user_id, keyword = keyword)
+            toDoRepository.searchToDoList(userId, keyword)
                 .catch { error ->
-                    _searchToDoList.value = ApiState.Error(error.message!!)
+                    _searchToDoList.value = DataState.Error(error)
                 }
-                .collectLatest { values ->
+                .collect { values ->
                     Log.d("logcat","listViewModel getToDoList call")
                     _searchToDoList.value = values
             }
@@ -39,7 +36,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun toLoadingApiResponse() {
-        _searchToDoList.value = ApiState.Loading()
+        _searchToDoList.value = DataState.Loading
         Log.d("logcat","set apiResponse loading")
     }
 

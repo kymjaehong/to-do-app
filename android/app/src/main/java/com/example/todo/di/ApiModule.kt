@@ -1,6 +1,6 @@
 package com.example.todo.di
 
-import com.example.todo.api.ToDoRetrofit
+import com.example.todo.data.api.ToDoRetrofit
 import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object NetworkModule {
+object ApiModule {
     private const val currVersion = "v1/"
     private const val baseUrl = "http://10.0.2.2:8000/api/$currVersion"
 

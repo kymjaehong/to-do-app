@@ -1,4 +1,4 @@
-package com.example.todo.data_layer.dto.response
+package com.example.todo.data.dto.response
 
 import com.google.gson.annotations.SerializedName
 

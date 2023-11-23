@@ -17,10 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
         <activity
-            android:name=".ToDoWriteActivity"
+            android:name=".ui.ToDoWriteActivity"
             android:exported="false" />
         <activity
-            android:name=".ToDoActivity"
+            android:name=".ui.ToDoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -70,6 +70,10 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    // sandwich
+    implementation("com.github.skydoves:sandwich:1.2.4")
+    // room
+    implementation("androidx.room:room-ktx:2.5.2")
 
     // [Compose]
     implementation(platform("androidx.compose:compose-bom:2022.10.00"))

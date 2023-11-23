@@ -1,4 +1,4 @@
-package com.example.todo.presentation_layer
+package com.example.todo.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,15 +10,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todo.api.ApiState
 import com.example.todo.databinding.ActivityToDoBinding
-import com.example.todo.presentation_layer.ui.BaseActivity
-import com.example.todo.presentation_layer.viewmodel.ListViewModel
+import com.example.todo.ui.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.example.todo.presentation_layer.adapter.ToDoListRecyclerViewAdapter
-import com.example.todo.presentation_layer.viewmodel.SearchViewModel
-import com.example.todo.presentation_layer.viewmodel.UpdateViewModel
+import com.example.todo.ui.adapter.ToDoListRecyclerViewAdapter
+import com.example.todo.ui.viewmodel.SearchViewModel
+import com.example.todo.ui.viewmodel.UpdateViewModel
+import com.example.todo.utils.DataState
 
 @AndroidEntryPoint
 class ToDoActivity : BaseActivity() {
@@ -48,24 +47,21 @@ class ToDoActivity : BaseActivity() {
                      */
                     getToDoList(1)
 
-                    todoList.collect { apiResponse ->
-                        when (apiResponse) {
-                            is ApiState.Success -> {
-                                apiResponse.data?.let { values ->
-                                    Log.d("logcat","todo activity: $values")
-                                    toDoRecyclerView.adapter = ToDoListRecyclerViewAdapter(
-                                        values,
-                                        LayoutInflater.from(this@ToDoActivity),
-                                        this@ToDoActivity
-                                    )
-                                }
-                                toLoadingApiResponse()
+                    todoList.collect { dataState ->
+                        when (dataState) {
+                            is DataState.Success -> {
+                                Log.d("logcat","todo activity: $dataState")
+                                toDoRecyclerView.adapter = ToDoListRecyclerViewAdapter(
+                                    dataState.data,
+                                    LayoutInflater.from(this@ToDoActivity),
+                                    this@ToDoActivity
+                                )
                             }
-                            is ApiState.Error -> {
-                                Log.e("logcat", "${apiResponse.message}")
-                                toLoadingApiResponse()
+                            is DataState.Error -> {
+                                Log.e("error", "${dataState.exception}")
                             }
-                            is ApiState.Loading -> {}
+                            is DataState.OtherError -> {}
+                            is DataState.Loading -> {}
                         }
                     }
                 }
@@ -98,25 +94,20 @@ class ToDoActivity : BaseActivity() {
              */
             searchToDoList(1, searchQuery)
 
-            searchTodoList.collect { apiResponse ->
-                when (apiResponse) {
-                    is ApiState.Success -> {
-                        apiResponse.data?.let { values ->
-                            toDoRecyclerView.adapter = ToDoListRecyclerViewAdapter(
-                                values,
-                                LayoutInflater.from(this@ToDoActivity),
-                                this@ToDoActivity
-                            )
-                        }
-                        toLoadingApiResponse()
+            searchTodoList.collect { dataState ->
+                when (dataState) {
+                    is DataState.Success -> {
+                        toDoRecyclerView.adapter = ToDoListRecyclerViewAdapter(
+                            dataState.data,
+                            LayoutInflater.from(this@ToDoActivity),
+                            this@ToDoActivity
+                        )
                     }
-
-                    is ApiState.Error -> {
-                        Log.e("logcat", "${apiResponse.message}")
-                        toLoadingApiResponse()
+                    is DataState.Error -> {
+                        Log.e("error", "${dataState.exception}")
                     }
-
-                    is ApiState.Loading -> {}
+                    is DataState.OtherError -> {}
+                    is DataState.Loading -> {}
                 }
             }
         }
@@ -128,17 +119,15 @@ class ToDoActivity : BaseActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 updateViewModel.apply {
                     updateToDoList(to_do_id)
-                    updateTodoList.collect { apiResponse ->
-                        when (apiResponse) {
-                            is ApiState.Success -> {}
-                            is ApiState.Error -> {
-                                Log.e("logcat", "${apiResponse.message}")
-                                toLoadingApiResponse()
-                            }
-                            is ApiState.Loading -> {
-                                Log.d("logcat", "update complete after~")
+                    updateTodoList.collect { dataState ->
+                        when (dataState) {
+                            is DataState.Success -> {
+                                // 성공 후, 화면 재 호출
                                 clickSearchBtn()
                             }
+                            is DataState.Error -> {}
+                            is DataState.OtherError -> {}
+                            is DataState.Loading -> {}
                         }
                     }
                 }

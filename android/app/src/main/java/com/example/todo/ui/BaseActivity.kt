@@ -1,4 +1,4 @@
-package com.example.todo.presentation_layer.ui
+package com.example.todo.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

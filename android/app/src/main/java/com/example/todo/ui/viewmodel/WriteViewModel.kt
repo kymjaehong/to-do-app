@@ -1,22 +1,21 @@
-package com.example.todo.presentation_layer.viewmodel
+package com.example.todo.ui.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.todo.api.RetrofitRepository
-import com.example.todo.data_layer.dto.request.ToDoWriteRequest
+import com.example.todo.data.dto.request.ToDoWriteRequest
+import com.example.todo.presentation.repository.ToDoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(
-    private val retrofitRepository: RetrofitRepository,
-    private val savedStateHandle: SavedStateHandle,
+    private val toDoRepository: ToDoRepository
 ): ViewModel() {
     // view model logic
     fun writeToDo(
+        userId: Int,
         toDoWriteRequest: ToDoWriteRequest,
     ) {
-        retrofitRepository.writeToDo(toDoWriteRequest)
+        toDoRepository.writeToDo(userId, toDoWriteRequest)
     }
 
 }

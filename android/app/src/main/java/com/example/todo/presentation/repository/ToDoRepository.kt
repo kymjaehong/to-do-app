@@ -1,11 +1,11 @@
-package com.example.todo.presentation_layer.repository
+package com.example.todo.presentation.repository
 
 
 import android.util.Log
-import com.example.todo.data_layer.api.ToDoRetrofit
-import com.example.todo.data_layer.dto.request.ToDoWriteRequest
-import com.example.todo.data_layer.dto.response.ToDoResponse
-import com.example.todo.data_layer.room.ToDoDao
+import com.example.todo.data.api.ToDoRetrofit
+import com.example.todo.data.dto.request.ToDoWriteRequest
+import com.example.todo.data.dto.response.ToDoResponse
+import com.example.todo.data.room.ToDoDao
 import com.example.todo.utils.DataState
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.message
@@ -15,10 +15,9 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 
 class ToDoRepository(
-    private val toDoDao: ToDoDao,
+    //private val toDoDao: ToDoDao,
     private val toDoRetrofit: ToDoRetrofit,
 ) {
     suspend fun getToDoList(userId: Int): Flow<DataState<List<ToDoResponse>>> =
@@ -35,7 +34,7 @@ class ToDoRepository(
                 //val networkToDoList = data
                 //toDoDao.insert(networkToDoList)
                 //val cacheToDoList = toDoDao.get()
-                emit(DataState.Success(data))
+                emit(DataState.Success(data.data))
             }
             response.suspendOnError {
                 when (statusCode) {
@@ -69,7 +68,7 @@ class ToDoRepository(
                 //val networkToDoList = data
                 //toDoDao.insert(networkToDoList)
                 //val cacheToDoList = toDoDao.get()
-                emit(DataState.Success(data))
+                emit(DataState.Success(data.data))
             }
             response.suspendOnError {
                 when (statusCode) {
@@ -89,8 +88,8 @@ class ToDoRepository(
             }
         }
 
-    suspend fun writeToDo(userId: Int, toDoWriteRequest: ToDoWriteRequest) {
-        // dao 처리
+    // post
+    fun writeToDo(userId: Int, toDoWriteRequest: ToDoWriteRequest) {
         toDoRetrofit.writeToDo(userId, toDoWriteRequest)
     }
 

@@ -69,7 +69,7 @@ class MyValidateToken(ABCValidateToken):
         print(f"split / url: {url_path_list}")
 
         if (
-            url_path_list[3] in ACCESS_URL_PATH.keys()
+            url_path_list[3] in ACCESS_URL_PATH
             and url_path_list[4] in ACCESS_URL_PATH[url_path_list[3]]
         ):
             # 토큰 검증을 거치지 않는 URL

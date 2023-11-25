@@ -52,5 +52,7 @@ CREATE TABLE `todo`.`todo` (
 ENGINE = InnoDB;
 ```
 ## MySQL Connector
+```
 aiomysql: async -> "mysql+aiomysql"
 mysql-connector-python: sync -> : "mysql+mysqlconnector"
+```

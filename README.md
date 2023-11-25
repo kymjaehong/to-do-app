@@ -51,3 +51,6 @@ CREATE TABLE `todo`.`todo` (
   ON UPDATE CASCADE)
 ENGINE = InnoDB;
 ```
+## MySQL Connector
+aiomysql: async -> "mysql+aiomysql"
+mysql-connector-python: sync -> : "mysql+mysqlconnector"

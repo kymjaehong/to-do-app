@@ -1,4 +1,4 @@
-import time
+import time, json
 from jose import jwt
 from fastapi import Depends, APIRouter
 from fastapi.encoders import jsonable_encoder
@@ -39,6 +39,9 @@ async def get_user(
 
 
 def generate_access_token(iat: float, user_id: int) -> str:
+    data = {
+        "user_id": user_id,
+    }
     payload = {
         "iss": "토큰 발급자의 해당 서비스 계정",
         "sub": "토큰 제목, 옵션",
@@ -46,7 +49,7 @@ def generate_access_token(iat: float, user_id: int) -> str:
         # "aud": "토큰 인증 서버 -> 해당 정보가 있으면 해당 서버로 인증 요청이 간다.",
         "iat": iat,
         "expiration_at": iat + ACCESS_TOKEN_EXPIRATION_MINUTES,
-        "user_id": user_id,
+        "data": json.dumps(data),
     }
     additional_headers = {"kid": "인증 서버 private key id"}
     encoded_jwt = jwt.encode(

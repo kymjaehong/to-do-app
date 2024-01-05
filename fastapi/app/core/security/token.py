@@ -1,4 +1,4 @@
-import time, logging
+import time, logging, json
 from jose import jwt
 from fastapi import security, Request, Depends
 
@@ -23,7 +23,7 @@ async def get_token_data(request: Request, iat: float):
             to_decode = jwt.decode(param, SECRET_KEY, algorithms=ALGORITHM)
             logger.info(f"만료일 확인 {to_decode['expiration_at']} > {iat}")
             if to_decode["expiration_at"] > iat:
-                return to_decode["data"]
+                return json.loads(to_decode["data"])
 
 
 class ABCValidateToken:
